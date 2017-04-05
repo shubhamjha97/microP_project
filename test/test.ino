@@ -35,14 +35,14 @@ void loop()
 {
     mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
     int corr[3];
-    corr[0]=-1000; corr[1]=0; corr[2]=15000;
+    corr[0]=0; corr[1]=0; corr[2]=15000;
     int axsp=0;
     int aysp=0;
     //int azsp=0;
     ax=ax/1000*1000-corr[0];
     ay=ay/1000*1000-corr[1];
     //az=az/1000*1000-corr[2];
-    //-1000, 0, 15000
+
     int errx=ax-axsp;
     int erry= ay-aysp;
     //int errz= az-azsp;
@@ -51,8 +51,8 @@ void loop()
 
     //Outer=x, Inner=y
 
-    int Kpx=1, Kix=1, Kdx=1;
-    int Kpy=1, Kiy=1, Kdy=1;
+    int Kpx=1, Kix=0, Kdx=1;
+    int Kpy=1, Kiy=0, Kdy=1;
 
     interrx+=errx;
     interry+=erry;
@@ -60,33 +60,33 @@ void loop()
     delerrx=prevx-ax;//prevx-ax
     delerry=prevy-ay;
     
-    x= Kpx*errx +Kdx*delerrx + Kix*interrx; //Map this value to servo range
-    y= Kpy*erry +Kdy*delerry + Kiy*interry; //Map this value to servo range
+    x= Kpx*errx +Kdx*delerrx + Kix*interrx;
+    y= Kpy*erry +Kdy*delerry + Kiy*interry;
 
     prevx=ax;
     prevy=ay;
-
-    Serial.print(errx);
-    Serial.print(", ");
-    Serial.print(erry);
-    Serial.print(", ");
-    Serial.print(x);
-    Serial.print(", ");
-    Serial.println(y); 
  
-    /*valo = map(ax, -17000, 17000, 179, 0);
+    valo = map(x, -17000, 17000, 179, 0);
     if (valo != prevValo)
     {
         outer.write(valo); 
         prevValo = valo; 
     }
     
-     vali = map(ay, -17000, 17000, 179, 0);
+     vali = map(y, -17000, 17000, 179, 0);
     if (vali != prevVali)
     {
         inner.write(vali); 
         prevVali = vali; 
-    }*/
+    }
+
+    /*Serial.print(errx);
+    Serial.print(", ");
+    Serial.print(erry);
+    Serial.print(", ");*/
+    Serial.print(vali);
+    Serial.print(", ");
+    Serial.println(valo); 
 
 }
 ///////////////////////////////////////////////////////////////////////////////////////
